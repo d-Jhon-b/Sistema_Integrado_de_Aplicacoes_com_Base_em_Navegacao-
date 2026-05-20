@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform, StatusBar } from 'react-native';
 
 interface DashboardProps {
   userEmail: string;
@@ -18,6 +18,7 @@ export function Dashboard({ userEmail, activeSubScreen, onChangeSubScreen, onLog
     { label: 'Conversor de Moedas', target: 'Moedas', icon: '🪙' },
     { label: 'Sistema Solar', target: 'Planetas', icon: '🪐' },
     { label: 'Pedidos / Cardápio', target: 'Pedidos', icon: '🍔' },
+    { label: 'Minha Conta', target: 'Perfil', icon: '👤' }, 
   ];
 
   const handleMenuClick = (target: string | null) => {
@@ -38,6 +39,7 @@ export function Dashboard({ userEmail, activeSubScreen, onChangeSubScreen, onLog
           )}
           <Text style={styles.headerTitle}>FATEC <Text style={{ fontWeight: '300' }}>Hub</Text></Text>
         </View>
+        
         <View style={styles.userInfo}>
           <Text style={styles.userBadge}>{userEmail.split('@')[0]}</Text>
           <TouchableOpacity style={styles.logoutBtn} onPress={onLogout}>
@@ -94,7 +96,22 @@ export function Dashboard({ userEmail, activeSubScreen, onChangeSubScreen, onLog
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f0f4f8' },
-  header: { height: 65, backgroundColor: '#005088', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, elevation: 4, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.2, shadowRadius: 3, paddingTop: Platform.OS === 'ios' ? 20 : 0 },
+  
+  header: { 
+    backgroundColor: '#005088', 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'space-between', 
+    paddingHorizontal: 20, 
+    elevation: 4, 
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 2 }, 
+    shadowOpacity: 0.2, 
+    shadowRadius: 3,
+    paddingTop: Platform.OS === 'ios' ? 25 : (Platform.OS === 'android' ? StatusBar.currentHeight : 0),
+    height: Platform.OS === 'ios' ? 75 : (Platform.OS === 'android' ? 65 + (StatusBar.currentHeight ?? 0) : 65)
+  },
+  
   headerLeft: { flexDirection: 'row', alignItems: 'center' },
   menuToggleButton: { marginRight: 15, padding: 5 },
   menuToggleText: { fontSize: 24, color: '#fff', fontWeight: 'bold' },
@@ -105,7 +122,9 @@ const styles = StyleSheet.create({
   logoutBtnText: { color: '#ffbcbc', fontSize: 14, fontWeight: '500' },
   body: { flex: 1, flexDirection: Platform.OS === 'web' ? 'row' : 'column' },
   sidebar: { width: 260, backgroundColor: '#fff', borderRightWidth: 1, borderRightColor: '#dbe3ec', padding: 15 },
-  sidebarMobile: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 99, width: '100%', height: '100%' },
+  
+  sidebarMobile: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 100, width: '100%', height: '100%' },
+  
   sidebarSectionTitle: { fontSize: 11, fontWeight: 'bold', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 10, paddingHorizontal: 10 },
   sidebarItem: { flexDirection: 'row', alignItems: 'center', paddingVertical: 12, paddingHorizontal: 12, borderRadius: 8, marginBottom: 5 },
   sidebarItemActive: { backgroundColor: '#e1f0fa' },

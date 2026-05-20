@@ -97,4 +97,43 @@ export class AuthService {
             return { success: false, message: "Erro interno ao salvar no banco de dados." };
         }
     }
+
+
+    async updateUser(email: string, newName: string, newPasswordRaw?: string) {
+        const safeEmail = email.trim().toLowerCase();
+        const safeName = newName.trim();
+
+        if (Platform.OS === 'web') {
+            console.log(`[Web Mode] Mock de atualização para: ${safeEmail}`);
+            return { success: true, message: "Dados atualizados com sucesso (Mock Web)!" };
+        }
+
+        try {
+            const db = await this.getDatabase();
+
+            if (newPasswordRaw && newPasswordRaw.trim() !== '') {
+                const payloadToHash = { usuario: safeName, password: newPasswordRaw };
+                const hashes = await hashToolsService.hashContentValues(payloadToHash);
+                const hashedPassword = hashes[1];
+
+                await db.runAsync(
+                    'UPDATE LOGIN SET usuario = ?, password = ? WHERE email = ?;',
+                    [safeName, hashedPassword, safeEmail]
+                );
+            } else {
+                await db.runAsync(
+                    'UPDATE LOGIN SET usuario = ? WHERE email = ?;',
+                    [safeName, safeEmail]
+                );
+            }
+
+            return { success: true, message: "Dados atualizados com sucesso!" };
+        } catch (error) {
+            console.error("❌ Erro crítico ao atualizar usuário no SQLite:", error);
+            return { success: false, message: "Erro interno ao atualizar os dados." };
+        }
+    }
+
+
+
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { DataBase } from './src/database/database';
-
+import Perfil from './src/components/ui/Perfil';
 
 import * as SQLite from 'expo-sqlite';
 
@@ -15,7 +15,7 @@ import Pedidos from './src/components/ui/Pedidos';
 import Planetas from './src/components/ui/planetasPage';
 
 export default function App() {
-  
+
   const [currentScreen, setCurrentScreen] = useState<'Login' | 'Home'>('Login');
   const [activeSubScreen, setActiveSubScreen] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState<string>('');
@@ -111,6 +111,7 @@ export default function App() {
       case 'Moedas': return <Moedas />;
       case 'Pedidos': return <Pedidos userEmail={userEmail} />;
       case 'Planetas': return <Planetas />;
+      case 'Perfil': return <Perfil userEmail={userEmail} />; 
       default: return null; 
     }
   };
